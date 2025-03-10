@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/Button";
 import { Heading } from "@/components/Heading";
 import { ImageComponent } from "@/components/ImageComponent";
@@ -9,14 +10,14 @@ import { FileUpload } from "@/components/FileUpload";
 export default function Home() {
   return (
    <div className="bg-gradient-to-r from-rose-100 to-teal-100 h-screen flex justify-center ">
-      <div className="mt-20 max-w-lg">
+      <div className="mt-20 max-w-4xl ">
         <Heading/>
 
-        <div className="mt-3">  
-          <Button onClick={()=>{}} className="bg-black text-white rounded-lg px-4 py-2 mr-2 text-sm" >
+        <div className="mt-3 flex justify-center">  
+          <Button  className="bg-black text-white rounded-lg px-4 py-2 mr-2 text-sm" >
             Go to chats
           </Button>
-          <Button onClick={()=>{}} className="text-black bg-white rounded-lg px-4 py-2 text-sm">
+          <Button className="text-black bg-white rounded-lg px-4 py-2 text-sm">
             Manage Subscriptions
           </Button>
         </div>
