@@ -14,21 +14,30 @@ datasource db {
 }
 
 model User {
-  id       Int        @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   name     String
   password String?
-  document Document[]
+  // document Document[]
 }
 
 model Document {
-  id     Int    @id @default(autoincrement())
-  name   String
-  url    String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
+  id      Int       @id @default(autoincrement())
+  name    String
+  url     String
+  userId  Int
+  // user   User   @relation(fields: [userId], references: [id])
+  message Message[]
 }
 
-model message {
-  id      Int    @id @default(autoincrement())
-  message String
+enum MessageRole {
+  system
+  user
+}
+
+model Message {
+  id         Int         @id @default(autoincrement())
+  role       MessageRole
+  documentId Int
+  content    String
+  document   Document    @relation(fields: [documentId], references: [id])
 }
