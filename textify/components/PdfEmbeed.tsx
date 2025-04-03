@@ -1,9 +1,12 @@
 
-export const PdfEmbeed = () => {
+export const PdfEmbeed = ({url} : {
+    url: string
+}) => {
     return <div className="w-full h-screen">
         
         <div className="w-full h-full p-10">
-            <iframe className="w-full h-full" src="https://docs.google.com/document/d/1dZ38Ohz-wLyBBAuOXlWRyIo9hB-n3NVRtGzzM8VG1es/preview?usp=embed_googleplus"></iframe>
+            <iframe className="w-full h-full" src={`http://docs.google.com/gview?url=${url}&embedded=true`}></iframe>
         </div>
+        
     </div>
 }
