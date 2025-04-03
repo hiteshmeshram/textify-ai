@@ -2,56 +2,63 @@
 
 import {prisma} from "./db"
 import axios from 'axios'
-import pdfParse from 'pdf-parse'
 import { generateSmallChunks } from "./generateSmallChunks";
 import { generateEmbedingsAndStoreToPinecondeDb } from "./generateEmbedingsAndStoreToPinecondeDb";
 import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils";
-import fs from 'fs'
-import path from "path";
-import {getDocument, GlobalWorkerOptions} from 'pdfjs-dist'
-import { PDFDocument } from 'pdf-lib';
 import { RecursiveCharacterTextSplitter, TextSplitter } from "langchain/text_splitter";
 import { generateEmbedings } from "./generateEmbedings";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./options";
+import { storeEmbedingsToPinecone } from "./pinecone";
 const pdf = require("pdf-parse-fork");
 
 export async function UploadurlToDb(url: string, fileName: string) {
+    const session = getServerSession(authOptions);
     console.log('inside upload to db')
     const do_pdf_url = `https://hitesh.blr1.digitaloceanspaces.com/${fileName}`;
     const name = fileName;
 
-    // await prisma.document.create({
-    //     data: {
-    //         name,
-    //         url: do_pdf_url,
-    //         userId: 1
-    //     }
-    // });
+    await prisma.document.create({
+        data: {
+            name,
+            url: do_pdf_url,
+            userId: 1
+        }
+    });
 
-    const response = await axios.get(do_pdf_url, {
-        responseType: "arraybuffer"
-    })
+    try {
+        const response = await axios.get(do_pdf_url, {
+            responseType: "arraybuffer"
+        })
+    
+        const data = await pdf(response.data);
+        await createSmallChunks(data.text);
 
-    pdf(response.data).then(function(data: any) {
-        createSmallChunks(data.text);
-        
-    })
-
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 async function createSmallChunks(text: any) {
+    console.log('inside create small chunk');
+    console.log(text);
     const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 128,
+        chunkSize: 200,
         chunkOverlap: 1,
         });
         
         const output = await splitter.createDocuments([text]);
         console.log(output[0])
-        
-        // return output;
-        //here create embedings and store it in pineconedb
-        const res = await generateEmbedings(output[0].pageContent);
+        await Promise.all(
+            output.map(async (chunk) => {
+                try {
+                   await generateEmbedings(chunk.pageContent);
+                } catch (error) {
+                    console.log(error)
+                }
 
-        //store it in pineconedb
-
+            }
+            )
+        )
 
 }

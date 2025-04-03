@@ -4,7 +4,6 @@ import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const s3Client = new S3Client({
-    
     endpoint: "https://blr1.digitaloceanspaces.com",
     region: 'blr1',
     credentials: {
@@ -13,12 +12,16 @@ const s3Client = new S3Client({
     }
 })
 
+console.log('outside presign function')
 export async function getPresignedUrlFromDigitalOcean(fileName: string, fileType: string) {
     try {
         const command = new PutObjectCommand({
-            Bucket: "muzer-assets",
+            Bucket: "hitesh",
             Key: fileName,
-            ContentType: fileType
+            ContentType: fileType,
+            ACL: "public-read",
+            ChecksumSHA256: "sha256Hash",
+		
         });
 
         const url = await getSignedUrl(s3Client, command, {expiresIn: 3600})

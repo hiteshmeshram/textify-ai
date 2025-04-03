@@ -17,6 +17,7 @@
 // }
 
 import { GoogleGenAI } from "@google/genai";
+import { storeEmbedingsToPinecone } from "./pinecone";
 
 export async function generateEmbedings(str: string) {
 
@@ -26,11 +27,16 @@ export async function generateEmbedings(str: string) {
     const response = await ai.models.embedContent({
         model: 'gemini-embedding-exp-03-07',
         contents: str,
+        config: {
+            outputDimensionality: 1024
+        }
     });
 
-    console.log('respoinse issssss')
     if(!response.embeddings) return null;
-    console.log(response.embeddings[0].values);
-    
-    return response;
+
+    const chunkId = Math.floor((Math.random() * 100)).toString();
+
+
+    await storeEmbedingsToPinecone(chunkId, response);
+
 }
