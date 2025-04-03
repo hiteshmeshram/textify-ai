@@ -18,7 +18,7 @@ export async function UploadurlToDb(url: string, fileName: string) {
     const do_pdf_url = `https://hitesh.blr1.digitaloceanspaces.com/${fileName}`;
     const name = fileName;
 
-    await prisma.document.create({
+    const document = await prisma.document.create({
         data: {
             name,
             url: do_pdf_url,
@@ -37,6 +37,8 @@ export async function UploadurlToDb(url: string, fileName: string) {
     } catch (error) {
         console.log(error);
     }
+
+    return document.id;
 }
 
 async function createSmallChunks(text: any) {

@@ -18,8 +18,9 @@ export default async function({params}: {
     params: {chatId: string}
 }) {
 
-  const chats = await getAllChats()
-  const chat = chats.filter((c)=>c.id === parseInt(params.chatId));
+    const chatId = await params.chatId;
+    const chats = await getAllChats()
+    const chat = chats.filter((c)=>c.id === parseInt(chatId));
 
     return <div className="flex gap-10">
         <Sidebar chats={chats}/>
@@ -27,7 +28,7 @@ export default async function({params}: {
             <PdfEmbeed url={chat[0].url}/>
         </div>
         <div className=" w-[500px]">
-            <ChatComponent/>
+            <ChatComponent />
         </div>
     </div>
 }

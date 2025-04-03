@@ -33,8 +33,8 @@ export const Upload = () => {
         
                 if(response.ok) {
                     alert('uploaded successfully')
-                    await UploadurlToDb(url,file.name);
-                    router.push('/chats')
+                    const id = await UploadurlToDb(url,file.name);
+                    router.push(`chats/${id}`)
                 }
               
     },[])

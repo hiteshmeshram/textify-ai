@@ -27,7 +27,7 @@ export const Sidebar = ({chats}: {
         <div className="p-5">
             {chats.map((chat) => (
                 
-                <ul className="">
+                <ul key={chat.id}>
                     <li onClick={()=> router.push(`${chat.id}`)} className="hover:cursor-pointer  px-4  rounded-xl border border-neutral-200 my-4 p-2 bg-gray-200 hover:bg-gray-300 rounded">{isOpen && chat.name}</li>
                 </ul>
                 

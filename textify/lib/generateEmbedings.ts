@@ -37,6 +37,6 @@ export async function generateEmbedings(str: string) {
     const chunkId = Math.floor((Math.random() * 100)).toString();
 
 
-    await storeEmbedingsToPinecone(chunkId, response);
+    await storeEmbedingsToPinecone(chunkId, response ,str);
 
 }
