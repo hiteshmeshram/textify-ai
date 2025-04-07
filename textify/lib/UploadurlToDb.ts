@@ -32,7 +32,7 @@ export async function UploadurlToDb(url: string, fileName: string) {
         })
     
         const data = await pdf(response.data);
-        await createSmallChunks(data.text);
+        await createSmallChunks(data.text , fileName);
 
     } catch (error) {
         console.log(error);
@@ -41,7 +41,7 @@ export async function UploadurlToDb(url: string, fileName: string) {
     return document.id;
 }
 
-async function createSmallChunks(text: any) {
+async function createSmallChunks(text: any , fileName: string) {
     console.log('inside create small chunk');
     console.log(text);
     const splitter = new RecursiveCharacterTextSplitter({
@@ -54,7 +54,7 @@ async function createSmallChunks(text: any) {
         await Promise.all(
             output.map(async (chunk) => {
                 try {
-                   await generateEmbedings(chunk.pageContent);
+                   await generateEmbedings(chunk.pageContent, fileName);
                 } catch (error) {
                     console.log(error)
                 }

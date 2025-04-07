@@ -1,13 +1,12 @@
 "use server"
 
-export async function getAllMessages() {
+export async function getAllMessages(chatId: number) {
     const messages = await prisma?.message.findMany({
         where: {
-            documentId: 24
+            documentId: chatId
         },
         take: 10,
         
     })
-    console.log(messages)
     return messages;
 }

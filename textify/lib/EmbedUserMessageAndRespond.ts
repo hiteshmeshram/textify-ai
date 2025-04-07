@@ -7,7 +7,7 @@ import prisma from "./db";
 const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
 const pc = new Pinecone({ apiKey: process.env.PINECONE_DATABASE_API_KEY ?? "" })
 
-export async function EmbedUserMessageAndRespond(message: string , chatId: string) {
+export async function EmbedUserMessageAndRespond(message: string , chat: any) {
   // const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
 
       //generate embedings and search for the top 5 embedings in pineconde db
@@ -23,7 +23,7 @@ export async function EmbedUserMessageAndRespond(message: string , chatId: strin
 
       //user message with pineconde db returned messages send to ai
 
-      const queryResponse = await queryPinecone(embeding.embeddings[0].values)
+      const queryResponse = await queryPinecone(embeding.embeddings[0].values ,chat.name)
       console.log(queryResponse.matches)
 
       // return response.text;
@@ -36,7 +36,7 @@ export async function EmbedUserMessageAndRespond(message: string , chatId: strin
 
       await prisma.message.create({
         data: {
-          documentId: 24,
+          documentId: chat.id,
           role: "user",
           content: message
         }
@@ -45,7 +45,7 @@ export async function EmbedUserMessageAndRespond(message: string , chatId: strin
       //here store it in db
       await prisma.message.create({
        data: {
-          documentId: 24,
+          documentId: chat.id,
           role: "system",
           content: text ?? ""
           
@@ -58,13 +58,13 @@ export async function EmbedUserMessageAndRespond(message: string , chatId: strin
     
 }
 
-async function queryPinecone(embeding: any) {
+async function queryPinecone(embeding: any , chatName: string) {
 
   // const pc = new Pinecone({ apiKey: process.env.PINECONE_DATABASE_API_KEY ?? "" })
 
   const index = pc.index('chat-pdf','https://chat-pdf-xdnfjv2.svc.aped-4627-b74a.pinecone.io' )
 
-  const queryResponse = await index.namespace('hitesh').query({
+  const queryResponse = await index.namespace(chatName).query({
     vector: embeding,
     topK: 3,
     includeValues: false,

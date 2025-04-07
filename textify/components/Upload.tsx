@@ -34,14 +34,14 @@ export const Upload = () => {
                 if(response.ok) {
                     alert('uploaded successfully')
                     const id = await UploadurlToDb(url,file.name);
-                    router.push(`chats/${id}`)
+                    router.push(`/chats/${id}`)
                 }
               
     },[])
     const {getRootProps, getInputProps} = useDropzone({onDrop});
 
-    return <div {...getRootProps()} className='mt-5 w-full h-[100px] border border-dotted rounded-md text-black flex flex-col justify-center items-center'>
-        <input {...getInputProps()} className='p-2 border border-neutral-200 bg-red-200'/>
+    return <div {...getRootProps()} className='text-neutral-400 mt-5 w-full h-[100px] bg-white  p-4 border border-dashed rounded-md text-black flex flex-col justify-center items-center'>
+        <input {...getInputProps()} className='m-4  border  border-neutral-200 bg-red-200'/>
         <UploadIcon/>
         <p>Upload files here!</p>
     </div>

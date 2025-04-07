@@ -16,30 +16,30 @@ import { Upload } from "@/components/Upload";
 
 export default async function Home() {
   const session = await getServerSession(authOptions)
-
   
-  // if(session?.user) {
-  //   return redirect('/dashboard')
-  // }
-  return (
-   <div className="bg-gradient-to-r from-rose-100 to-teal-100 h-screen flex justify-center ">
-      <div className="mt-20 max-w-4xl ">
-        {/* <button className="absolute top-0 right-0 bg-black text-white text-semibold px-4 py-2 m-4 rounded-xl">signin</button> */}
-        <Appbar/>
-        <Heading/>
 
+  // if(session?.user) {
+  //   return redirect('/chats/5')
+  // }
+
+  return (
+   <div className="bg-gradient-to-r from-rose-100 to-teal-100 min-h-screen w-full flex flex-col items-center justify-center ">
+    <div className="w-full justify-end">
+      <Appbar/>
+     
+    </div>
+      <div className="mt-10 max-w-4xl ">
+        <Heading/>
         <div className="mt-5 flex justify-center">  
           <Button  className="bg-black text-white rounded-lg px-4 py-2 mr-2 text-sm" >
             Get Started
           </Button>
-          <Button className="text-black bg-white rounded-lg px-4 py-2 text-sm">
+          <Button className="text-black bg-white rounded-lg px-4 py-2 text-sm ">
             Manage Subscriptions
           </Button>
         </div>
         <SubHeading/>
-
-        <Upload/>
-        
+        { session && <Upload/>}
         <ImageComponent/>
       </div>
    </div>

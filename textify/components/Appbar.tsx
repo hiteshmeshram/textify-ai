@@ -7,13 +7,19 @@ import { useRouter } from "next/navigation";
 export const Appbar = () => {
     const session = useSession();
     const router = useRouter()
-    return <div className="">
+    return <div className="flex  justify-end items-center">
+         <div>
+            <button className="border border-black font-semibold px-4 py-2 rounded-xl">Textify Pro</button>
+        </div>
+        <div>
         {session?.data?.user ? <Button onClick={()=>{
             signOut()
             
-        } }className="absolute top-0 right-0 bg-black text-white text-semibold px-4 py-2 m-4 rounded-xl">signout</Button> : <Button onClick={()=> {
+        } }className=" bg-black text-white text-semibold px-4 py-2 m-4 rounded-xl">Signout</Button> : <Button onClick={()=> {
             signIn();
-            }} className="absolute top-0 right-0 bg-black text-white text-semibold px-4 py-2 m-4 rounded-xl">signin</Button>}
+            }} className=" bg-black text-white text-semibold px-4 py-2 m-4 rounded-xl">signin</Button>}
+        </div>
+       
         
 
     </div>

@@ -19,7 +19,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { storeEmbedingsToPinecone } from "./pinecone";
 
-export async function generateEmbedings(str: string) {
+export async function generateEmbedings(str: string , fileName: string) {
 
     console.log('inside generate embedings')
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -37,6 +37,6 @@ export async function generateEmbedings(str: string) {
     const chunkId = Math.floor((Math.random() * 100)).toString();
 
 
-    await storeEmbedingsToPinecone(chunkId, response ,str);
+    await storeEmbedingsToPinecone(chunkId, response ,str, fileName);
 
 }
