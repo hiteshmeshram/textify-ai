@@ -2,7 +2,7 @@
 
 import { getPresignedUrlFromDigitalOcean } from '@/lib/getPresignedUrlFromDigitalOcean';
 import { UploadurlToDb } from '@/lib/UploadurlToDb';
-import { Router, UploadIcon } from 'lucide-react';
+import {  UploadIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import {useDropzone} from 'react-dropzone';
@@ -11,7 +11,6 @@ export const Upload = () => {
     const router = useRouter();
     const onDrop = useCallback(async (acceptedFiles: any) => {
         const file = acceptedFiles[0];
-        console.log('inside drop')
         if(!file) {
             alert('upload file')
             return ;

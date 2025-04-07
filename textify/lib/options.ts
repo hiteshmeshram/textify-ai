@@ -19,13 +19,11 @@ export const authOptions = {
           if(user) {
             token.uid = user.id;
           }
-          // token.uid = user.id
-          console.log(token)
-          console.log('user is',user)
+    
           return token;
         },
         async session({session,token,user}: any) {
-          // session.user.id = token.uid
+         
           if(session.user) {
             session.user.id = token.uid;
           }

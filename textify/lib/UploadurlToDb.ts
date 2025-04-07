@@ -14,7 +14,6 @@ const pdf = require("pdf-parse-fork");
 
 export async function UploadurlToDb(url: string, fileName: string) {
     const session = getServerSession(authOptions);
-    console.log('inside upload to db')
     const do_pdf_url = `https://hitesh.blr1.digitaloceanspaces.com/${fileName}`;
     const name = fileName;
 
@@ -42,15 +41,13 @@ export async function UploadurlToDb(url: string, fileName: string) {
 }
 
 async function createSmallChunks(text: any , fileName: string) {
-    console.log('inside create small chunk');
-    console.log(text);
     const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: 200,
         chunkOverlap: 1,
         });
         
         const output = await splitter.createDocuments([text]);
-        console.log(output[0])
+       
         await Promise.all(
             output.map(async (chunk) => {
                 try {

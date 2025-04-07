@@ -21,12 +21,7 @@ export async function EmbedUserMessageAndRespond(message: string , chat: any) {
 
       if(!embeding.embeddings) return null;
 
-      //user message with pineconde db returned messages send to ai
-
       const queryResponse = await queryPinecone(embeding.embeddings[0].values ,chat.name)
-      console.log(queryResponse.matches)
-
-      // return response.text;
     
       const response = await sendToAi(message , queryResponse.matches)
       if(!response) return null;
@@ -42,7 +37,6 @@ export async function EmbedUserMessageAndRespond(message: string , chat: any) {
         }
       })
 
-      //here store it in db
       await prisma.message.create({
        data: {
           documentId: chat.id,
@@ -52,15 +46,11 @@ export async function EmbedUserMessageAndRespond(message: string , chat: any) {
           
         }
       })
-      // return response;
-
-      // await storeInDatabase(response)
+     
     
 }
 
 async function queryPinecone(embeding: any , chatName: string) {
-
-  // const pc = new Pinecone({ apiKey: process.env.PINECONE_DATABASE_API_KEY ?? "" })
 
   const index = pc.index('chat-pdf','https://chat-pdf-xdnfjv2.svc.aped-4627-b74a.pinecone.io' )
 
@@ -83,7 +73,6 @@ type ArrayOfqueryResponse = {
 }
 
 async function sendToAi(message: string, arrayOfQueryResponse: any) {
-  // const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
 
     const formatedResponse = arrayOfQueryResponse.map((r: any)=> {return r.metadata.text})
     console.log('inside sendto ai funn');

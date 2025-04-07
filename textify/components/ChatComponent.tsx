@@ -39,12 +39,6 @@ export const ChatComponent = ({chat}: {
 
         async function handleClick() {
             const response = await EmbedUserMessageAndRespond(message , chat)
-
-            //@ts-ignore
-            console.log(response[0].text)
-            // @ts-ignore
-            // const m = response?.parts[0].text;
-            // setMessages(m => [...m,{role: 'system', content: m as unknown as  string}])
         }
         
     return <div className="mt-10 w-full mr-5 ">

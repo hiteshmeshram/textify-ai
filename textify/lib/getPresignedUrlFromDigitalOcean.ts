@@ -12,7 +12,7 @@ const s3Client = new S3Client({
     }
 })
 
-console.log('outside presign function')
+
 export async function getPresignedUrlFromDigitalOcean(fileName: string, fileType: string) {
     try {
         const command = new PutObjectCommand({
