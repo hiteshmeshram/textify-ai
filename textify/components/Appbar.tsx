@@ -2,11 +2,10 @@
 
 import { signIn, signOut, useSession } from "next-auth/react"
 import { Button } from "./Button"
-import { useRouter } from "next/navigation";
 
 export const Appbar = () => {
     const session = useSession();
-    const router = useRouter()
+    
     return <div className="flex  justify-end items-center">
          <div>
             <button className="border border-black font-semibold px-4 py-2 rounded-xl">Textify Pro</button>

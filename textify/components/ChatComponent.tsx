@@ -1,7 +1,6 @@
 'use client'
 import { EmbedUserMessageAndRespond } from "@/lib/EmbedUserMessageAndRespond"
 import { getAllMessages } from "@/lib/getAllMessages"
-import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 interface Message {
@@ -21,8 +20,7 @@ export const ChatComponent = ({chat}: {
 }) => {
     const [message,setMessage] = useState("");
     const [messages,setMessages] = useState< Message[]>()
-
-    const session = useSession();
+    const [render,setRender ] = useState(false);
 
         async function getData() {
             const messagesss = await getAllMessages(chat.id);
@@ -35,10 +33,13 @@ export const ChatComponent = ({chat}: {
         useEffect(()=> {
             getData();
           
-        },[])
+        },[render])
 
         async function handleClick() {
             const response = await EmbedUserMessageAndRespond(message , chat)
+            if(response) {
+                setRender(!render)
+            }
         }
         
     return <div className="mt-10 w-full mr-5 ">

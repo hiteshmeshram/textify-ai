@@ -7,11 +7,15 @@ import prisma from "./db";
 const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
 const pc = new Pinecone({ apiKey: process.env.PINECONE_DATABASE_API_KEY ?? "" })
 
-export async function EmbedUserMessageAndRespond(message: string , chat: any) {
-  // const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
-
-      //generate embedings and search for the top 5 embedings in pineconde db
-      const embeding = await ai.models.embedContent({
+type Chat = {
+    name: string;
+    id: number;
+    url: string;
+    userId: number
+}
+export async function EmbedUserMessageAndRespond(message: string , chat: Chat) {
+ 
+  const embeding = await ai.models.embedContent({
         model: 'gemini-embedding-exp-03-07',
         contents: message,
         config: {
@@ -21,12 +25,15 @@ export async function EmbedUserMessageAndRespond(message: string , chat: any) {
 
       if(!embeding.embeddings) return null;
 
-      const queryResponse = await queryPinecone(embeding.embeddings[0].values ,chat.name)
+      const queryResponse = await queryPinecone(embeding.embeddings[0].values! ,chat.name)
+      const a = queryResponse.matches
+      console.log(a)
     
-      const response = await sendToAi(message , queryResponse.matches)
+      
+      const response = await sendToAi(message , queryResponse.matches )
       if(!response) return null;
 
-      //@ts-ignore
+      //@ts-expect-error
       const text = response.parts[0].text 
 
       await prisma.message.create({
@@ -50,7 +57,7 @@ export async function EmbedUserMessageAndRespond(message: string , chat: any) {
     
 }
 
-async function queryPinecone(embeding: any , chatName: string) {
+async function queryPinecone(embeding: number[] , chatName: string) {
 
   const index = pc.index('chat-pdf','https://chat-pdf-xdnfjv2.svc.aped-4627-b74a.pinecone.io' )
 
@@ -66,18 +73,18 @@ async function queryPinecone(embeding: any , chatName: string) {
 
 type ArrayOfqueryResponse = {
       id: string,
-      score: number,
-      values: any,
+      score?: number | undefined,
+      values?: [],
       sparseValues: string,
-      metadata: any
+      metadata: {
+        text: string
+      }
 }
 
-async function sendToAi(message: string, arrayOfQueryResponse: any) {
+async function sendToAi(message: string, arrayOfQueryResponse: any ) {
 
     const formatedResponse = arrayOfQueryResponse.map((r: any)=> {return r.metadata.text})
-    console.log('inside sendto ai funn');
-    console.log(formatedResponse)
-
+ 
     const prompt = `
       You are an AI assistant. Answer the user's question based on the retrieved context.
 
@@ -95,9 +102,9 @@ async function sendToAi(message: string, arrayOfQueryResponse: any) {
         contents: [{role: 'user', parts: [{text: prompt}]}],
       });
       if(!response ) return null;
-      //@ts-ignore
+      //@ts-expect-error
       console.log(response.candidates[0].content);
-      //@ts-ignore
+      //@ts-expect-error
       return response.candidates[0].content
 
       

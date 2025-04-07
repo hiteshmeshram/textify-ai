@@ -3,12 +3,10 @@ import { PdfEmbeed } from "@/components/PdfEmbeed";
 import { Sidebar } from "@/components/Sidebar";
 import prisma from "@/lib/db";
 import { authOptions } from "@/lib/options";
-import { error } from "console";
 import { getServerSession } from "next-auth";
 
-
 async function getAllChats() {
-    const session =await getServerSession(authOptions)
+    const session = await getServerSession(authOptions)
     
     const user = await prisma.user.findUnique({
         where: {
@@ -24,23 +22,26 @@ async function getAllChats() {
 
     return chats;
 }
- 
-export default async function({params}: {
-    params: {chatId: string}
-}) {
-
-    const chatId = await params.chatId;
-    const chats = await getAllChats()
+ interface PageProps {
+    params: Promise<{
+        chatId: string
+    }>
+ }
+export default async function ChatPage({params}: PageProps) {
+    
+    const chatId = (await params).chatId;
+    const chats = await getAllChats();
     if(!chats) return;
-    const chat = chats.filter((c)=>c.id === parseInt(chatId));
+    const chat = chats.find((c)=>c.id === parseInt(chatId));
+    if(!chat) return;
 
     return <div className="flex gap-10 mx-2">
         <Sidebar chats={chats}/>
         <div className="flex-1 " >
-            <PdfEmbeed url={chat[0].url}/>
+            <PdfEmbeed url={chat.url}/>
         </div>
         <div className=" w-[500px]">
-            <ChatComponent chat={chat[0]}/>
+            <ChatComponent chat={chat}/>
         </div>
     </div>
 }

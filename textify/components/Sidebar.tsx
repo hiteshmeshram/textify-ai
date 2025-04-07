@@ -16,7 +16,7 @@ interface ChatsProps {
 export const Sidebar = ({chats}: {
     chats: ChatsProps[]
 }) => {
-    const [isOpen,setIsOpen] = useState<Boolean>(true);
+    const [isOpen,setIsOpen] = useState<boolean>(true);
     const router = useRouter()
     const [selected,setSelected] = useState(0);
 

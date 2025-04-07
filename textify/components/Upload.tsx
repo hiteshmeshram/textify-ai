@@ -9,7 +9,7 @@ import {useDropzone} from 'react-dropzone';
 
 export const Upload = () => {
     const router = useRouter();
-    const onDrop = useCallback(async (acceptedFiles: any) => {
+    const onDrop = useCallback(async (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
         if(!file) {
             alert('upload file')

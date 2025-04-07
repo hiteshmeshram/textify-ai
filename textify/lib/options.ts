@@ -1,8 +1,6 @@
 
 import GoogleProvider from "next-auth/providers/google";
-import { signIn } from "next-auth/react";
 import prisma from "./db";
-import { userAgent } from "next/server";
 
 export const authOptions = {
     providers: [
@@ -15,6 +13,7 @@ export const authOptions = {
       ],
       secret: process.env.NEXTAUTH_SECRET,
       callbacks: {
+        //ts-ignore
         async jwt({user,token}: any) {
           if(user) {
             token.uid = user.id;
@@ -22,14 +21,14 @@ export const authOptions = {
     
           return token;
         },
-        async session({session,token,user}: any) {
+        async session({session,token}: any) {
          
           if(session.user) {
             session.user.id = token.uid;
           }
           return session
         },
-        async signIn({user,account,profile}: any) {
+        async signIn({user}: any) {
           const existingUser = await prisma.user.findUnique({
             where: {
               email: user.email

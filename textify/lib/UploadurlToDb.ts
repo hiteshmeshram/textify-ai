@@ -2,18 +2,12 @@
 
 import {prisma} from "./db"
 import axios from 'axios'
-import { generateSmallChunks } from "./generateSmallChunks";
-import { generateEmbedingsAndStoreToPinecondeDb } from "./generateEmbedingsAndStoreToPinecondeDb";
-import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils";
-import { RecursiveCharacterTextSplitter, TextSplitter } from "langchain/text_splitter";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { generateEmbedings } from "./generateEmbedings";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./options";
-import { storeEmbedingsToPinecone } from "./pinecone";
+//ts-ignore
 const pdf = require("pdf-parse-fork");
 
 export async function UploadurlToDb(url: string, fileName: string) {
-    const session = getServerSession(authOptions);
     const do_pdf_url = `https://hitesh.blr1.digitaloceanspaces.com/${fileName}`;
     const name = fileName;
 
