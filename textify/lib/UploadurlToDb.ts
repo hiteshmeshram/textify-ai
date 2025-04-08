@@ -1,11 +1,13 @@
 "use server"
 
-import {prisma} from "./db"
+import prisma from "./db"
 import axios from 'axios'
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { generateEmbedings } from "./generateEmbedings";
-//ts-ignore
-const pdf = require("pdf-parse-fork");
+
+// const pdf = require("pdf-parse-fork");
+//@ts-expect-error : pdf parse has no types
+import pdf from 'pdf-parse-fork'
 
 export async function UploadurlToDb(url: string, fileName: string) {
     const do_pdf_url = `https://hitesh.blr1.digitaloceanspaces.com/${fileName}`;
@@ -34,7 +36,7 @@ export async function UploadurlToDb(url: string, fileName: string) {
     return document.id;
 }
 
-async function createSmallChunks(text: any , fileName: string) {
+async function createSmallChunks(text: string , fileName: string) {
     const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: 200,
         chunkOverlap: 1,

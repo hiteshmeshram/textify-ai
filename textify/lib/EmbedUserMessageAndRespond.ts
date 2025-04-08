@@ -1,7 +1,7 @@
 'use server'
 
 import { GoogleGenAI } from "@google/genai";
-import { Pinecone } from "@pinecone-database/pinecone";
+import { Pinecone, RecordMetadata, ScoredPineconeRecord } from "@pinecone-database/pinecone";
 import prisma from "./db";
 
 const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
@@ -32,9 +32,8 @@ export async function EmbedUserMessageAndRespond(message: string , chat: Chat) {
       
       const response = await sendToAi(message , queryResponse.matches )
       if(!response) return null;
-
-      //@ts-expect-error
-      const text = response.parts[0].text 
+      
+      const text = response.parts![0].text 
 
       await prisma.message.create({
         data: {
@@ -54,7 +53,7 @@ export async function EmbedUserMessageAndRespond(message: string , chat: Chat) {
         }
       })
      
-    
+    return;
 }
 
 async function queryPinecone(embeding: number[] , chatName: string) {
@@ -71,19 +70,11 @@ async function queryPinecone(embeding: number[] , chatName: string) {
   return queryResponse;
 }
 
-type ArrayOfqueryResponse = {
-      id: string,
-      score?: number | undefined,
-      values?: [],
-      sparseValues: string,
-      metadata: {
-        text: string
-      }
-}
+async function sendToAi(message: string, arrayOfQueryResponse:  ScoredPineconeRecord<RecordMetadata>[]) {
+  console.log('arraayof queryRespoinse')
+  console.log(arrayOfQueryResponse)
 
-async function sendToAi(message: string, arrayOfQueryResponse: any ) {
-
-    const formatedResponse = arrayOfQueryResponse.map((r: any)=> {return r.metadata.text})
+    const formatedResponse = arrayOfQueryResponse.map((r)=> {return r.metadata!.text})
  
     const prompt = `
       You are an AI assistant. Answer the user's question based on the retrieved context.
@@ -102,10 +93,8 @@ async function sendToAi(message: string, arrayOfQueryResponse: any ) {
         contents: [{role: 'user', parts: [{text: prompt}]}],
       });
       if(!response ) return null;
-      //@ts-expect-error
-      console.log(response.candidates[0].content);
-      //@ts-expect-error
-      return response.candidates[0].content
+      
+      return response.candidates![0].content
 
       
 

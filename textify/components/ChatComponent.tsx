@@ -18,9 +18,10 @@ export const ChatComponent = ({chat}: {
         userId: number;
     }
 }) => {
-    const [message,setMessage] = useState("");
+    const [message,setMessage] = useState<string >("");
     const [messages,setMessages] = useState< Message[]>()
     const [render,setRender ] = useState(false);
+   
 
         async function getData() {
             const messagesss = await getAllMessages(chat.id);
@@ -36,10 +37,11 @@ export const ChatComponent = ({chat}: {
         },[render])
 
         async function handleClick() {
-            const response = await EmbedUserMessageAndRespond(message , chat)
-            if(response) {
-                setRender(!render)
-            }
+            console.log(render)
+            await EmbedUserMessageAndRespond(message , chat)
+            setMessage("")
+            setRender(!render);      
+            
         }
         
     return <div className="mt-10 w-full mr-5 ">
@@ -57,7 +59,7 @@ export const ChatComponent = ({chat}: {
                 <input 
                     onChange={(e)=> setMessage(e.target.value)}
                     type='text' 
-                    className="border border-neutral-400 p-2 w-3/4 mr-4 rounded-full"></input>
+                    className="border border-neutral-400 p-2 px-4 w-3/4 mr-4 rounded-full"></input>
                 <button
                     onClick={handleClick} 
                     className="bg-purple-800 px-2 rounded-xl text-white">send</button>
