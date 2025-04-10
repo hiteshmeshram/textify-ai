@@ -3,13 +3,6 @@ import GoogleProvider from "next-auth/providers/google";
 import prisma from "./db";
 import { AuthOptions } from "next-auth";
 
-interface User {
-  id:string
-  name: string
-  email: string
-  image: string
-}
-
 export const authOptions: AuthOptions = {
     providers: [
         GoogleProvider({

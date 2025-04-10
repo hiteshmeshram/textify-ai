@@ -18,7 +18,7 @@ export async function UploadurlToDb(url: string, fileName: string) {
 
     const user = await prisma.user.findUnique({
         where: {
-            email: session?.user?.email!
+            email: session!.user!.email!
         }
     })
 
