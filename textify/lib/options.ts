@@ -1,6 +1,7 @@
 
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "./db";
+import { AuthOptions } from "next-auth";
 
 interface User {
   id:string
@@ -9,7 +10,7 @@ interface User {
   image: string
 }
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID ?? "",
@@ -20,20 +21,18 @@ export const authOptions = {
       ],
       secret: process.env.NEXTAUTH_SECRET,
       callbacks: {
-        //@ts-expect-error : not sure about types
-        async signIn({user}: User) {
-          console.log(user)
+        async signIn({user}) {
           const existingUser = await prisma.user.findUnique({
             where: {
-              email: user.email
+              email: user.email!
             }
           })
 
           if(!existingUser) {
              await prisma.user.create({
               data: {
-                email: user.email,
-                name: user.name
+                email: user.email!,
+                name: user.name!
               }
               
             })
