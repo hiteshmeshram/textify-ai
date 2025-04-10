@@ -57,6 +57,7 @@ export const ChatComponent = ({chat}: {
             </div>
             <div className="flex mt-5 pb-15 ">
                 <input 
+                    value={message}
                     onChange={(e)=> setMessage(e.target.value)}
                     type='text' 
                     className="border border-neutral-400 p-2 px-4 w-3/4 mr-4 rounded-full"></input>
